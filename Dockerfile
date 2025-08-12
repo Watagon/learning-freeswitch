@@ -50,3 +50,7 @@ cd ~/.vim/colors/
 wget https://raw.githubusercontent.com/jnurmine/Zenburn/de2fa06a93fe1494638ec7b2fdd565898be25de6/colors/zenburn.vim
 EOF
 
+RUN <<EOF cat >> ~/.bashrc
+export PS1="\u@\h:\W\$ "
+export TERM=xterm-256color
+EOF

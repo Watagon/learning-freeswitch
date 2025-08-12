@@ -40,6 +40,8 @@ windows:
 
 ```
 
+The 'freeswitch' windows will have freeswitch in CLI mode. So you can experiment issuing commants to it (try 'help').
+
 Obs: sngrep2 is a fork of [sngrep](https://github.com/irontec/sngrep) with support for RFC2833 DTMF and MRCP support.
 
 ## Test-driven development
@@ -202,11 +204,12 @@ Create a folder named exercises and create the following scripts inside it:
 
   1. send_fax.js: send a fax to freeswitch (send artifacts/sample.tiff)
   2. receive_fax.js: receive a fax from freeswitch (instruct freeswitch to send artifacts/sample.tiff)
-  3. gateway2user.js: perform SIP REGISTER simulating a terminal for account 1000 and make a call simulating gateway that will reach the terminal. Exchange DTMF between them and terminate the call.
+  3. user2user.js: perform SIP REGISTER simulating terminals for accounts 1000 and 1001 and make a call from 1000 to 1001. Exchange DTMF between them and terminate the call.
+  4. gateway2user.js: perform SIP REGISTER simulating a terminal for account 1000 and make a call simulating gateway that will reach the terminal. Exchange DTMF between them and terminate the call.
 
-Then for each javascript file, create the equivalent lua script (at folder scripts, with the same name but with suffix .lua) to execute the action and add an entry to call the lua script at conf/dialplan/public/mylua.xml. 
+Then for each javascript file, create the equivalent lua script (at folder scripts, with the same name but with suffix .lua) to execute the specified action and add an entry to call the lua script at conf/dialplan/public/mylua.xml. 
 
-You can reload the dialplan by doing 'reloadxml' at the freeswitch window (CLI).
+You can reload the dialplan by doing 'reloadxml' at the 'freeswitch' window (CLI).
 
 You can find samples on how to do these things directly between sip-lab endpoints here: https://github.com/MayamaTakeshi/sip-lab/tree/master/samples
 
