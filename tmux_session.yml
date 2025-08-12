@@ -1,0 +1,11 @@
+name: learning-freeswitch
+root: ~/
+
+windows:
+  - freeswitch:
+    - /usr/local/freeswitch/bin/freeswitch -nonat
+  - sngrep2:
+    - sngrep2 -d any
+  - samples:
+    - cd /root/src/git/learning-freeswitch/samples
+

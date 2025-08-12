@@ -1,0 +1,8 @@
+<include>
+  <extension name="public_mylua">
+    <condition field="destination_number" expression="^05011112222">
+      <action application="lua" data="hello.lua"/>
+    </condition>
+  </extension>
+</include>
+
