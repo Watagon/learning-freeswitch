@@ -202,7 +202,7 @@ Create a folder named exercises and create the following scripts inside it:
 
   1. send_fax.js: send a fax to freeswitch (send artifacts/sample.tiff)
   2. receive_fax.js: receive a fax from freeswitch (instruct freeswitch to send artifacts/sample.tiff)
-  3. user2user.js: perform SiP REGISTER for accounts 1000 and 1001 and make a call from 1000 to 1001
+  3. gateway2user.js: perform SIP REGISTER simulating a terminal for account 1000 and make a call simulating gateway that will reach the terminal. Exchange DTMF between them and terminate the call.
 
 Then for each javascript file, create the equivalent lua script (at folder scripts, with the same name but with suffix .lua) to execute the action and add an entry to call the lua script at conf/dialplan/public/mylua.xml. 
 
@@ -210,6 +210,7 @@ You can reload the dialplan by doing 'reloadxml' at the freeswitch window (CLI).
 
 You can find samples on how to do these things directly between sip-lab endpoints here: https://github.com/MayamaTakeshi/sip-lab/tree/master/samples
 
-So basically, for 1 and 2 you should replace one of endpoints with freeswitch and for 3, you should put freeswitch between the sip-lab endpoints.
+For gateway2user.lua, you will need to research freeswitch documentation (or ask ChatGPT etc) on how to connect to a REGISTERed terminal.
+
 
 
