@@ -3,9 +3,9 @@ root: ~/
 
 windows:
   - freeswitch:
-    - /usr/local/freeswitch/bin/freeswitch -nonat
+    - sudo /usr/local/freeswitch/bin/freeswitch -nonat
   - sngrep2:
-    - sngrep2 -d any
+    - sudo sngrep2 -d any
   - samples:
-    - cd /root/src/git/learning-freeswitch/samples
+    - cd ~/src/git/learning-freeswitch/samples
 

@@ -32,15 +32,15 @@ root: ~/
 
 windows:
   - freeswitch:
-    - /usr/local/freeswitch/bin/freeswitch -nonat
+    - sudo /usr/local/freeswitch/bin/freeswitch -nonat
   - sngrep2:
-    - sngrep2 -d any
+    - sudo sngrep2 -d any
   - samples:
-    - cd /root/src/git/learning-freeswitch/samples
+    - cd ~/src/git/learning-freeswitch/samples
 
 ```
 
-The 'freeswitch' windows will have freeswitch in CLI mode. So you can experiment issuing commants to it (try 'help').
+The 'freeswitch' window will have freeswitch in CLI mode. So you can experiment issuing commands to it (try 'help').
 
 Obs: sngrep2 is a fork of [sngrep](https://github.com/irontec/sngrep) with support for RFC2833 DTMF and MRCP support.
 
@@ -207,13 +207,13 @@ Create a folder named exercises and create the following scripts inside it:
   3. user2user.js: perform SIP REGISTER simulating terminals for accounts 1000 and 1001 and make a call from 1000 to 1001. Exchange DTMF between them and terminate the call.
   4. gateway2user.js: perform SIP REGISTER simulating a terminal for account 1000 and make a call simulating gateway that will reach the terminal. Exchange DTMF between them and terminate the call.
 
-Then for each javascript file, create the equivalent lua script (at folder scripts, with the same name but with suffix .lua) to execute the specified action and add an entry to call the lua script at conf/dialplan/public/mylua.xml. 
+For each javascript file, create the equivalent lua script (at folder scripts, with the same name but with suffix '.lua') to execute the specified action and add an entry to call the lua script at conf/dialplan/public/mylua.xml. 
 
 You can reload the dialplan by doing 'reloadxml' at the 'freeswitch' window (CLI).
 
 You can find samples on how to do these things directly between sip-lab endpoints here: https://github.com/MayamaTakeshi/sip-lab/tree/master/samples
 
-For gateway2user.lua, you will need to research freeswitch documentation (or ask ChatGPT etc) on how to connect to a REGISTERed terminal.
+For gateway2user.lua, you will need to research freeswitch documentation (or ask ChatGPT etc) on how to connect (bridge) to a REGISTERed terminal.
 
 
 
