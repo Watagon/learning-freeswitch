@@ -40,19 +40,19 @@ windows:
 
 ```
 
-Obs: sngrep2 is a fork of sngrep with support for RFC2833 DTMF and MRCP support.
+Obs: sngrep2 is a fork of [sngrep](https://github.com/irontec/sngrep) with support for RFC2833 DTMF and MRCP support.
 
-## Test-based development
+## Test-driven development
 
-When developing solutions with freeswitch, we need to provide test scripts confirming their proper behavior.
+When developing solutions, we need to provide test scripts confirming their proper behavior.
 
-So we use node.js [zeq](https://github.com/MayamaTakeshi/zeq) module that permits to specify functional tests.
+So we use node.js [zeq](https://github.com/MayamaTakeshi/zeq) module that permits to write functional tests.
 
 This is a simple library that permits to sequence execution of commands and wait for events triggered by the commands.
 
-Then [sip-lab](https://github.com/MayamaTakeshi/sip-lab) is used to make/receive SIP calls.
+Then [sip-lab](https://github.com/MayamaTakeshi/sip-lab) is used to make/receive SIP calls and perform media operations (play/record audio files, detect digits, send receive fax, etc).
 
-So we combine these two libraries to write functional SIP tests. You can see a sample here: https://github.com/MayamaTakeshi/sip-lab/blob/master/samples/simple.js
+So we combine these two libraries to write functional SIP tests. You can see a generic sample (not involving freeswitch) here: https://github.com/MayamaTakeshi/sip-lab/blob/master/samples/simple.js
 
 ## Running a sample test script
 
@@ -66,13 +66,14 @@ The above will install node.js modules required by the test script.
 
 After it finishes, create config/default.json by doing:
 ```
-cp config/default.json.sample config/default.js
+cp config/default.json.sample config/default.json
 ```
 and update the value of local_ip:
+```
 {
   "local_ip": "192.168.0.113"
 }
-
+```
 with the value of the ipv4 address used by freeswitch:
 ```
 root@takeshi-desktop:~# netstat -upnl|grep 5060             
@@ -107,22 +108,31 @@ session:sleep(500)
 session:execute("echo")
 ```
 
-which answers the call, sleeps for 500 milliseconds (need to make sure the voice path is open) and execute application 'echo' which echoes all audio back to the caller. 
+which answers the call, sleeps for 500 milliseconds (need to make sure the voice path is open) and execute application 'echo' which echoes all audio it receives back to the caller. 
 
-The echo.js script then sends some DTMF and wait for their echo and terminates the call.
+The echo.js script then sends some DTMF digits and wait for their echo and terminates the call.
 
 Once the script finishes, switch to the 'sngrep2' window and check how the SIP communication between sip-lab and freeswitch was done.
 
 Then switch to the 'freeswitch' window and inspect the freeswitch output.
 
+So study the echo.js script and try to correlate it with the output in the tmux windows.
 
 ## Configuring freeswitch
 
 Configuration of freeswitch involves several files depending of the modules/features you are using.
 
-The configuration starts from /usr/local/freeswitch/conf/freeswitch.xml (this file includes/loads all the other configuration files).
+The configuration starts from /usr/local/freeswitch/conf/freeswitch.xml (this file have directives to include all the other configuration files).
 
 But for the scope of this learning material we will concentrate on the diaplan and lua module.
+
+Roughtly, the dialplan specifies what should be done when a call arrives. 
+
+Based on parameters like the destination number it decides what actions (answer, refuse, play audio file, send fax etc) should be performed.
+
+These actions can be specified using XML but alternatively, we can delegate the control of the call to programming language like lua and javascript.
+
+In our case, we will be using lua (provided by module mod_lua).
 
 Documentation:
 
@@ -132,7 +142,7 @@ Documentation:
 
 Obs: for dialplan, it is good to check the xml files under /usr/local/freeswitch/conf/dialplan/ as they contain several samples showing how it can be used.
 
-So when testing with dialplan or lua scripts, you can change the files in the folders 'conf/dialplan/public' and 'scripts' in this repo as they are mapped to the proper folders insinde the container at
+So when testing with dialplan or lua scripts, you can change the files in the folders 'conf/dialplan/public' and 'scripts' in this repo as they are mapped to the proper folders inside the container at
 
 /usr/local/freeswitch/conf/dialplan/public
 
@@ -146,9 +156,9 @@ and
 
 Using sip-lab inside the container, we cannot listen to audio output from freeswitch. 
 
-This is not strictly necessary as since we automate tests when working, nobody will actually listen anything.
+This is not strictly necessary as since we use test automation, nobody is supposed to listen to anything.
 
-But sometimes we might actually need to interact with freeswitch during troubleshooting/debugging so we will need a sip phone.
+But sometimes we might need to interact with freeswitch during troubleshooting/debugging and speak/listen to audio so we will need a sip phone.
 
 A good option is [baresip](https://github.com/baresip/baresip) which is a command-line sip phone that you can run in your desktop PC.
 
@@ -157,7 +167,9 @@ Follow its github page on how to build it or install it using your OS package ma
 Then set this account line in ~/.baresip/accounts to permit to talk with freeswitch:
 ```
 <sip:1000@test1.com>;outbound="sip:192.168.0.113:5060";auth_pass=1234
+
 ```
+The freeswitch configuration is set with 20 SIP accounts (SIP usernames from 1000 to 1019) with the same password '1234'.
 
 Obs: change '192.168.0.113' with your local ip address (the ip address listened by freeswitch).
 
@@ -166,13 +178,38 @@ Then you can make a call to freeswitch this way:
 baresip -e 'dsip:9198@test1.com'
 ```
 
-The above destination, sip:9198, will play a song using tones.
+The above is instructing bare sip to execute a 'd' (dial) command to destination sip:9198@test1.com.
 
-And you can try other destinations like:
+This destination is processed by a dialplan entry that will play a song using tones. You can finish the call by pressing 'Control-C'.
+
+Then you can try other destinations like:
 
 9195: delay_echo (echo audio back after a delay)
 
 9196: echo (echo audio back)
 
 See: /usr/local/freeswitch/conf/dialplan/default.xml
+
+Obs: when checking the SIP flows at the 'sngrep2' window, you will see REGISTER and NOTIFY flows too in addition to the INVITE flow.
+
+This is because since we are using the freeswitch default endpoint (used for SIP terminals) we will have these things as they are part of typical SIP terminal operation:
+  - REGISTER is used to inform freeswitch where the terminal can be contacted in case someone needs to talk to its user
+  - NOTIFY is used for miscelaneous information the terminal might want send to the server (but in this case, freeswitch doesn't care about it).
+
+## Exercises
+
+Create a folder named exercises and create the following scripts inside it:
+
+  1. send_fax.js: send a fax to freeswitch (send artifacts/sample.tiff)
+  2. receive_fax.js: receive a fax from freeswitch (instruct freeswitch to send artifacts/sample.tiff)
+  3. user2user.js: perform SiP REGISTER for accounts 1000 and 1001 and make a call from 1000 to 1001
+
+Then for each javascript file, create the equivalent lua script (at folder scripts, with the same name but with suffix .lua) to execute the action and add an entry to call the lua script at conf/dialplan/public/mylua.xml. 
+
+You can reload the dialplan by doing 'reloadxml' at the freeswitch window (CLI).
+
+You can find samples on how to do these things directly between sip-lab endpoints here: https://github.com/MayamaTakeshi/sip-lab/tree/master/samples
+
+So basically, for 1 and 2 you should replace one of endpoints with freeswitch and for 3, you should put freeswitch between the sip-lab endpoints.
+
 
