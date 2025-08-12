@@ -217,5 +217,17 @@ You can find samples on how to do these things directly between sip-lab endpoint
 
 For gateway2user.lua, you will need to research freeswitch documentation (or ask ChatGPT etc) on how to connect (bridge) to a REGISTERed terminal.
 
+How to write the javascript files: 
+
+We don't need to write the full file at once. 
+
+We just start executing the some command and wait for something to happen. 
+
+So for example, we start executing a command like sip.call.create() and then right after it we add 'await z.sleep(5000)' and see how freeswitch reacts to it (the sleep would likely be interrupted by some event).
+
+Then if the reaction is not what we expect or the sleep times out, we correct our command(s) till we get the expected event(s).
+
+Then thne expected event is added in a 'await z.wait()' command and then we add the next command and so on.
+
 
 
