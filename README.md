@@ -54,11 +54,13 @@ This is a simple library that permits to sequence execution of commands and wait
 
 Then [sip-lab](https://github.com/MayamaTakeshi/sip-lab) is used to make/receive SIP calls and perform media operations (play/record audio files, detect digits, send receive fax, etc).
 
-So we combine these two libraries to write functional SIP tests. You can see a generic sample (not involving freeswitch) here: https://github.com/MayamaTakeshi/sip-lab/blob/master/samples/simple.js
+So we combine these two libraries to write functional SIP tests.
+
+You can see a generic sample (not involving freeswitch) here: https://github.com/MayamaTakeshi/sip-lab/blob/master/samples/simple.js
 
 ## Running a sample test script
 
-Once inside the container, switch to the 'samples' window and do:
+Inside the container, in the tmux session, switch to the 'samples' window and do:
 
 ```
 npm i
@@ -76,7 +78,7 @@ and update the value of local_ip:
   "local_ip": "192.168.0.113"
 }
 ```
-with the value of the ipv4 address used by freeswitch:
+with the value of the ipv4 address used by freeswitch that can obtained like this:
 ```
 root@takeshi-desktop:~# netstat -upnl|grep 5060             
 udp        0      0 192.168.0.113:5060      0.0.0.0:*                           663/freeswitch      
