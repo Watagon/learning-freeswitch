@@ -146,7 +146,7 @@ Then if an event like:
   param2: 'def',
 }
 ````
-is received, there will be a match because by default, we do a partial match, meaning we don't care about all the parameters in the event and we are interested on specific fields in the event (in the above, only the event name matters).
+is received, there will be a match because by default, we do a partial match, meaning we don't care about all the parameters in the event and we are interested in specific fields in the event (in the above, only the event name matters).
 
 Also, we can pass functions to perform the match. See: https://github.com/MayamaTakeshi/data-matching/tree/master?tab=readme-ov-file#using-matching-functions
 
