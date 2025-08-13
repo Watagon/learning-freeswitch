@@ -102,7 +102,7 @@ takeshi@takeshi-desktop:learning-freeswitch$ cat conf/dialplan/public/mylua.xml
 </include>
 ```
 
-As we can see, the above will execute this lua script:
+The above will execute this lua script:
 ```
 takeshi@takeshi-desktop:learning-freeswitch$ cat scripts/hello.lua 
 session:answer()
@@ -156,7 +156,7 @@ and
 
 (see start_container.sh).
 
-## Using baresip to listen to freeswitch output.
+## Using baresip to listen to freeswitch output
 
 Using sip-lab inside the container, we cannot listen to audio output from freeswitch. 
 
@@ -170,7 +170,7 @@ Follow its github page on how to build it or install it using your OS package ma
 
 Then set this account line in ~/.baresip/accounts to permit to talk with freeswitch:
 ```
-<sip:1000@test1.com>;auth_pass=12345
+<sip:1000@test1.com>;auth_pass=1234
 
 ```
 The freeswitch configuration is set with 20 SIP accounts (SIP usernames from 1000 to 1019) with the same password '1234'.
@@ -184,7 +184,7 @@ Obs: change '192.168.0.113' with your local ip address (the ip address listened 
 
 The above is instructing bare sip to execute a 'd' (dial) command to destination sip:9198@192.168.0.113.
 
-This destination is processed by a dialplan entry that will play a song using tones. You can finish the call by pressing 'Control-C'.
+This destination 9198 is processed by a dialplan entry that will play a song using tones. You can finish the call by pressing 'Control-C'.
 
 Then you can try other destinations like:
 
