@@ -229,7 +229,7 @@ The configuration starts from /usr/local/freeswitch/conf/freeswitch.xml (this fi
 
 But for the scope of this learning material we will concentrate on the diaplan and lua module.
 
-Roughtly, the dialplan specifies what should be done when a call arrives. 
+Roughly, the dialplan specifies what should be done when a call arrives. 
 
 Based on parameters like the destination number it decides what actions (answer, refuse, play audio file, send fax etc) should be performed.
 
