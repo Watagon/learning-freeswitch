@@ -150,7 +150,7 @@ is received, there will be a match because by default, we do a partial match, me
 
 Also, we can pass functions to perform the match. See: https://github.com/MayamaTakeshi/data-matching/tree/master?tab=readme-ov-file#using-matching-functions
 
-Then regarding matching SIP messages, when inspecing the output of 'node echo.js' you might notice this:
+Then regarding matching SIP messages, when inspecting the output of 'node echo.js' you might notice this:
 ```
 06:14:25.363  wait (echo.js:42) got event:                                                                                                                                                                                 [308/1867]
 06:14:25.363    {                                                                                                 
