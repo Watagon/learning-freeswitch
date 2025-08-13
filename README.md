@@ -122,6 +122,105 @@ Then switch to the 'freeswitch' window and inspect the freeswitch output.
 
 So study the echo.js script and try to correlate it with the output in the tmux windows.
 
+## Event matching
+
+The [zeq](https://github.com/MayamaTakeshi/zeq) performs event matching when 
+```
+await z.wait(LIST_OF_EVENTS_TO_WAIT_FOR, TIMEOUT)
+```
+is called.
+
+The event matching is performed by [data-matching](https://github.com/MayamaTakeshi/data-matching).
+
+A matching event specification can be as simple as something like this:
+```
+{
+  event: 'something_happened',
+}
+```
+Then if an event like:
+```
+{
+  event: 'something_happened',
+  param1: 'abc',
+  param2: 'def',
+}
+````
+is received, there will be a match because by default, we do a partial match, meaning we don't care about all the parameters in the event and we are interested on specific fields in the event (in the above, only the event name matters).
+
+Also, we can pass functions to perform the match. See: https://github.com/MayamaTakeshi/data-matching/tree/master?tab=readme-ov-file#using-matching-functions
+
+Then regarding matching SIP messages, when inspecing the output of 'node echo.js' you might notice this:
+```
+06:14:25.363  wait (echo.js:42) got event:                                                                                                                                                                                 [308/1867]
+06:14:25.363    {                                                                                                 
+    event: 'response',                                                                                            
+    call_id: 0,                                                                                                                                                                                                                      
+    method: 'INVITE',                                                                                             
+    msg: 'SIP/2.0 200 OK\r\n' +                                                                                                                                                                                                      
+  'Via: SIP/2.0/UDP 192.168.0.113:5061;rport=5061;branch=z9hG4bKPjc5d5d4ce-0eaf-4f9d-89a4-753dfa916bcb\r\n' +
+  'From: <sip:0312341234@test.com>;tag=80d3b5c8-1e3c-421c-af25-93d936bb1c33\r\n' +                                
+  'To: <sip:05011112222@192.168.0.113>;tag=DDcU1ZD07QrFc\r\n' +                                                   
+  'Call-ID: 44cafe81-2daa-433f-bd07-f0221bed5159\r\n' +  
+  'CSeq: 22338 INVITE\r\n' +                             
+  'Contact: <sip:05011112222@192.168.0.113:5080;transport=udp>\r\n' +                                             
+  'User-Agent: FreeSWITCH-mod_sofia/1.10.7-dev+git~20210825T173719Z~dd2411336f~64bit\r\n' +                       
+  'Accept: application/sdp\r\n' +
+  'Allow: INVITE, ACK, BYE, CANCEL, OPTIONS, MESSAGE, INFO, UPDATE, REGISTER, REFER, NOTIFY\r\n' +                
+  'Supported: timer, path, replaces\r\n' +                                                                        
+  'Allow-Events: talk, hold, conference, refer\r\n' +                                                             
+  'Content-Type: application/sdp\r\n' +                
+  'Content-Disposition: session\r\n' +                                                                            
+  'Content-Length: 257\r\n' +                                                                                     
+  'Remote-Party-ID: "05011112222" <sip:05011112222@192.168.0.113>;party=calling;privacy=off;screen=no\r\n' +      
+  '\r\n' +                                             
+  'v=0\r\n' +               
+  'o=FreeSWITCH 1755095157 1755095158 IN IP4 192.168.0.113\r\n' +                          
+  's=FreeSWITCH\r\n' +     
+  'c=IN IP4 192.168.0.113\r\n' +          
+  't=0 0\r\n' +                           
+  'm=audio 24508 RTP/AVP 0 120\r\n' +
+  'a=rtpmap:0 PCMU/8000\r\n' +                                                                                                                                                                                                       
+  'a=rtpmap:120 telephone-event/8000\r\n' +                                                                                                                                                                                          
+  'a=fmtp:120 0-16\r\n' +
+  'a=ptime:20\r\n' +
+  'a=rtcp:24509 IN IP4 192.168.0.113\r\n'
+  }
+06:14:25.363  
+06:14:25.363  Trying match against expected_events[0]:
+06:14:25.364    partial_match({
+    event: 'response',
+    call_id: 0,
+    method: 'INVITE',
+    msg: sip_msg({
+      $rs: '200',
+      $rr: 'OK'
+    })
+  })
+06:14:25.364  Match successful
+```
+As we can see, there was a match. But the msg field matching is done by a function sip_msg (from [sip-matching](https://github.com/MayamaTakeshi/sip-matching)).
+
+This is because it would be very hard to match a raw SIP message as:
+  - the order of headers might differ
+  - the value of the header Call-ID is generated randomically
+  - the value of params like branch, tag in header values would also be generated randomically
+
+So instead, we use sip_msg by passing a dict containing the fields we are intersted in and it will generate a matching function that will:
+  - parse the raw SIP message
+  - try to match each field specified in the dict
+
+The parsing of the SIP message is performed by [sip-parsing](https://github.com/MayamaTakeshi/sip-parsing) which permits to access SIP message fields using opensips/kamailio/openser pseudo-variable syntax.
+
+So in:
+```
+    msg: sip_msg({
+      $rs: '200',
+      $rr: 'OK'
+    })
+```
+we are saying the reply status ($rs) must be '200' and the reply reason ($rr) must be 'OK'.
+
 ## Configuring freeswitch
 
 Configuration of freeswitch involves several files depending of the modules/features you are using.
