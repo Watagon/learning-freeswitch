@@ -170,19 +170,19 @@ Follow its github page on how to build it or install it using your OS package ma
 
 Then set this account line in ~/.baresip/accounts to permit to talk with freeswitch:
 ```
-<sip:1000@test1.com>;outbound="sip:192.168.0.113:5060";auth_pass=1234
+<sip:1000@test1.com>;auth_pass=12345
 
 ```
 The freeswitch configuration is set with 20 SIP accounts (SIP usernames from 1000 to 1019) with the same password '1234'.
 
-Obs: change '192.168.0.113' with your local ip address (the ip address listened by freeswitch).
 
 Then you can make a call to freeswitch this way:
 ```
-baresip -e 'dsip:9198@test1.com'
+baresip -e 'dsip:9198@192.168.0.113'
 ```
+Obs: change '192.168.0.113' with your local ip address (the ip address listened by freeswitch).
 
-The above is instructing bare sip to execute a 'd' (dial) command to destination sip:9198@test1.com.
+The above is instructing bare sip to execute a 'd' (dial) command to destination sip:9198@192.168.0.113.
 
 This destination is processed by a dialplan entry that will play a song using tones. You can finish the call by pressing 'Control-C'.
 
@@ -221,13 +221,15 @@ How to write the javascript files:
 
 We don't need to write the full file at once. 
 
-We just start executing the some command and wait for something to happen. 
+We just start executing some command and wait for something to happen. 
 
 So for example, we start executing a command like sip.call.create() and then right after it we add 'await z.sleep(5000)' and see how freeswitch reacts to it (the sleep would likely be interrupted by some event).
 
-Then if the reaction is not what we expect or the sleep times out, we correct our command(s) till we get the expected event(s).
+Then if the reaction is not what we expect or the sleep times out, we correct our command(s) and/or freeswitch config files/scripts till we get the expected event(s).
 
-Then thne expected event is added in a 'await z.wait()' command and then we add the next command and so on.
+Then the expected event is added in a 'await z.wait()' command and then we add the next command and so on till we get the expected behavior of the system under development/test.
+
+
 
 
 
