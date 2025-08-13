@@ -42,7 +42,7 @@ windows:
 
 The 'freeswitch' window will have freeswitch in CLI mode. So you can experiment issuing commands to it (try 'help').
 
-Obs: sngrep2 is a fork of [sngrep](https://github.com/irontec/sngrep) with support for RFC2833 DTMF and MRCP support.
+Obs: sngrep2 is a fork of [sngrep](https://github.com/irontec/sngrep) with support for parsing of RFC2833 DTMF and MRCP.
 
 ## Test-driven development
 
