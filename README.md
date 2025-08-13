@@ -95,7 +95,7 @@ The above makes a call to 05011112222 at freeswitch public interface that reache
 takeshi@takeshi-desktop:learning-freeswitch$ cat conf/dialplan/public/mylua.xml 
 <include>
   <extension name="public_mylua">
-    <condition field="destination_number" expression="^05011112222">
+    <condition field="destination_number" expression="^05011112222$">
       <action application="lua" data="hello.lua"/>
     </condition>
   </extension>
