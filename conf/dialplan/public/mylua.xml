@@ -4,5 +4,30 @@
       <action application="lua" data="hello.lua"/>
     </condition>
   </extension>
+  <extension name="public_mylua_test_send_fax">
+    <condition field="destination_number" expression="^05033334444$">
+      <action application="lua" data="send_fax.lua"/>
+    </condition>
+  </extension>
+  <extension name="public_fax_receive_prototype">
+    <condition field="destination_number" expression="^05033334445$">
+      <action application="answer" />
+      <action application="playback" data="silence_stream://2000"/>
+      <action application="rxfax" data="/tmp/FAX-${uuid}.tif"/>
+      <action application="hangup"/>
+    </condition>
+  </extension>
+  <extension name="public_mylua_test_receive_fax">
+    <condition field="destination_number" expression="^05033334446$">
+      <action application="lua" data="receive_fax.lua"/>
+    </condition>
+  </extension>
+  <extension name="public_fax_send_prototype">
+    <condition field="destination_number" expression="^05033334447$">
+      <action application="answer" />
+      <action application="txfax" data="/tmp/artifacts/sample.tiff"/>
+      <action application="hangup"/>
+    </condition>
+  </extension>
 </include>
 
