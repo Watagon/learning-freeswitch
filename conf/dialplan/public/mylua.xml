@@ -29,5 +29,10 @@
       <action application="hangup"/>
     </condition>
   </extension>
+  <extension name="public_user2user">
+    <condition field="destination_number" expression="^user2user_1001">
+      <action application="lua" data="user2user.lua"/>
+    </condition>
+  </extension>
 </include>
 
