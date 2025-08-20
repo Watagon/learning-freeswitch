@@ -34,5 +34,13 @@
       <action application="lua" data="user2user.lua"/>
     </condition>
   </extension>
+  <extension>
+    <condition field="destination_number" expression="^gateway2user_1001">
+        <!--
+        <action application="bridge" data="user/1001"/>
+        -->
+        <action application="lua" data="gateway2user.lua"/>
+    </condition>
+  </extension>
 </include>
 
