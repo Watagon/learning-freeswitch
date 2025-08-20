@@ -40,6 +40,8 @@ async function test() {
     console.log("t1", t1)
     console.log("t2", t2)
 
+    z.add_event_filter({ event: 'non_dialog_request' })
+
     const acc1 = sip.account.create(t1.id, { ...conf, username: '1000'})
     const acc2 = sip.account.create(t2.id, { ...conf, username: '1001'})
 
@@ -74,10 +76,6 @@ async function test() {
             realm: config.local_ip
         }
     })
-
-    // TODO: running this test after a while from last executing,
-    // event `non_dialog_request` (`NOTIFY`) occures and the matching will fail
-    // z.add_event_filter({ event: 'non_dialog_request', call_id: oc.id })
 
     // wait for replies from freeswitch
     await z.wait([
