@@ -29,21 +29,8 @@
       <action application="hangup"/>
     </condition>
   </extension>
-  <extension name="public_user2user">
-    <condition field="destination_number" expression="^user2user_1001$">
-      <action application="lua" data="user2user.lua"/>
-    </condition>
-  </extension>
-  <extension name="public_user2user_bridge">
-    <condition field="destination_number" expression="^user2user_1001_bridge$">
-      <action application="lua" data="user2user_bridge.lua"/>
-    </condition>
-  </extension>
   <extension>
-    <condition field="destination_number" expression="^gateway2user_1001">
-        <!--
-        <action application="bridge" data="user/1001"/>
-        -->
+    <condition field="destination_number" expression="05077778888">
         <action application="lua" data="gateway2user.lua"/>
     </condition>
   </extension>

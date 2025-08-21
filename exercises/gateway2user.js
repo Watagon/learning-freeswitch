@@ -34,7 +34,7 @@ async function test() {
     const t2 = sip.transport.create({address: config.local_ip})
 
     let calling_number = '1000'
-    let called_number = 'gateway2user_1001'
+    let called_number = '05077778888'
 
     // print transports 
     console.log("t1", t1)
@@ -45,20 +45,12 @@ async function test() {
     z.add_event_filter({ event: 'non_dialog_request' })
 
     // wait for replies from freeswitch
-    const acc1 = sip.account.create(t1.id, { ...conf, username: '1000'})
     const acc2 = sip.account.create(t2.id, { ...conf, username: '1001'})
 
     // regist terminals
-    sip.account.register(acc1, { auto_refresh: true })
     sip.account.register(acc2, { auto_refresh: true })
 
     await z.wait([
-        {
-            event: 'registration_status',
-            account_id: acc1.id,
-            code: 200,
-            reason: 'OK',
-        },
         {
             event: 'registration_status',
             account_id: acc2.id,
@@ -66,18 +58,12 @@ async function test() {
             reason: 'OK',
         },
     ], 10 * 1000)
-    console.log('acc1', acc1)
     console.log('acc2', acc2)
 
     // create a call to freeswitch public interface (port 5080)
     const oc = sip.call.create(t1.id, {
-        from_uri: `sip:${calling_number}@${config.local_ip}:5080`,
+        from_uri: `sip:${calling_number}@test.com`,
         to_uri: `sip:${called_number}@${config.local_ip}:5080`,
-        auth: {
-            username: '1000',
-            password: '1234',
-            realm: config.local_ip
-        }
     })
 
     await z.wait([
@@ -86,15 +72,6 @@ async function test() {
             call_id: m.collect('call_id'),
             transport_id: t2.id,
         },
-        // {
-        //     event: 'response',
-        //     call_id: oc.id,
-        //     method: 'INVITE',
-        //     msg: sip_msg({
-        //         $rs: '407',
-        //         $rr: 'Proxy Authentication Required',
-        //     }),
-        // },
         {
             event: 'response',
             call_id: oc.id,
