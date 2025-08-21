@@ -20,6 +20,7 @@ docker run \
   -it \
   --net=host \
   -v /etc/localtime:/etc/localtime:ro \
+  -v `pwd`/conf/dialplan/default/:/usr/local/freeswitch/conf/dialplan/default \
   -v `pwd`/conf/dialplan/public/:/usr/local/freeswitch/conf/dialplan/public \
   -v `pwd`/scripts:/usr/local/freeswitch/scripts \
   -v `pwd`/..:/home/$git_user_name/src/git \
