@@ -66,7 +66,7 @@ async function test() {
     console.log('acc1', acc1)
     console.log('acc2', acc2)
 
-    // create a call to freeswitch public interface (port 5080)
+    // create a call to freeswitch default interface (port 5060)
     const oc = sip.call.create(t1.id, {
         from_uri: `sip:${calling_number}@${config.local_ip}:5060`,
         to_uri: `sip:${called_number}@${config.local_ip}:5060`,
