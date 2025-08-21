@@ -34,7 +34,7 @@ async function test() {
     const t2 = sip.transport.create({address: config.local_ip})
 
     let calling_number = '1000'
-    let called_number = '1001'
+    let called_number = 'user2user_1001_bridge'
 
     // print transports 
     console.log("t1", t1)
@@ -69,7 +69,7 @@ async function test() {
     // create a call to freeswitch public interface (port 5080)
     const oc = sip.call.create(t1.id, {
         from_uri: `sip:${calling_number}@${config.local_ip}:5060`,
-        to_uri: `sip:${called_number}@${config.local_ip}:5060`,
+        to_uri: `sip:${called_number}@${config.local_ip}:5080`,
         auth: {
             username: '1000',
             password: '1234',
@@ -83,15 +83,6 @@ async function test() {
             event: 'incoming_call',
             call_id: m.collect('call_id'),
             transport_id: t2.id,
-        },
-        {
-            event: 'response',
-            call_id: oc.id,
-            method: 'INVITE',
-            msg: sip_msg({
-                $rs: '407',
-                $rr: 'Proxy Authentication Required',
-            }),
         },
         {
             event: 'response',
