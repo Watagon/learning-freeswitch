@@ -57,7 +57,7 @@ async function test() {
     // create a call to freeswitch public interface (port 5080)
     const oc = sip.call.create(t1.id, {
         from_uri: `sip:${calling_number}@${config.local_ip}:5060`,
-        to_uri: `sip:${called_number}@${config.local_ip}:5080`,
+        to_uri: `sip:${called_number}@${config.local_ip}:5060`,
         auth: {
             username: '1000',
             password: '1234',
@@ -78,6 +78,15 @@ async function test() {
             msg: sip_msg({
                 $rs: '100',
                 $rr: 'Trying',
+            }),
+        },
+        {
+            event: 'response',
+            call_id: oc.id,
+            method: 'INVITE',
+            msg: sip_msg({
+                $rs: '407',
+                $rr: 'Proxy Authentication Required',
             }),
         },
     ], 1000)
