@@ -1,0 +1,8 @@
+<include>
+  <extension name="default_mylua">
+    <condition field="destination_number" expression="^user1001$">
+      <action application="lua" data="user2user.lua"/>
+    </condition>
+  </extension>
+</include>
+
