@@ -1,7 +1,7 @@
 <include>
   <extension name="default_mylua">
     <condition field="destination_number" expression="^user1001$">
-      <action application="lua" data="user2user.lua"/>
+      <action application="lua" data="user2user_bridge.lua"/>
     </condition>
   </extension>
 </include>
