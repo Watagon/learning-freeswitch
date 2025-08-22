@@ -89,20 +89,8 @@ async function test() {
         },
     ], 60 * 1000)
 
-    // terminate the call
-    sip.call.terminate(oc.id)
-
     // wait for termination events
     await z.wait([
-        {
-            event: 'response',
-            call_id: oc.id,
-            method: 'BYE',
-            msg: sip_msg({
-                $rs: '200',
-                $rr: 'OK',
-            }),
-        },
         {
             event: 'call_ended',
             call_id: oc.id,
