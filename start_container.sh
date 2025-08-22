@@ -23,6 +23,7 @@ docker run \
   -v `pwd`/conf/dialplan/default/:/usr/local/freeswitch/conf/dialplan/default \
   -v `pwd`/conf/dialplan/public/:/usr/local/freeswitch/conf/dialplan/public \
   -v `pwd`/scripts:/usr/local/freeswitch/scripts \
+  -v `pwd`/artifacts:/tmp/artifacts:ro \
   -v `pwd`/..:/home/$git_user_name/src/git \
   -w /home/$git_user_name/src/git/learning-freeswitch \
   freeswitch-with-sngrep2
