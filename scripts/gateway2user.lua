@@ -1,5 +1,5 @@
 --[[
-  simulating gateway
+  bridgeing call from gateway to user
 ]]
 
 local function plogln(level, msgs)
